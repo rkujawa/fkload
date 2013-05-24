@@ -16,7 +16,8 @@ ciaddra		EQU	$200
 
 	dc.w		$1111
 start:
-	lea		stack,sp ; $040000,sp ; set stack pointer 
+;	lea		stack,sp ; $040000,sp ; set stack pointer 
+	lea		$040000,sp ; set stack pointer 
 
 	move.l		#$020000,d0		; delay
 	subq.l		#1,d0 
@@ -25,9 +26,9 @@ start:
 	move.b		#2,ciaabase		; dim LED
 
 ;	lea		__bss_start,a0		; clear bss
-.1:	clr.l		(a0)+
-	cmp.l		#__bss_end,a0
-	blo		.1
+;.1:	clr.l		(a0)+
+;	cmp.l		#__bss_end,a0
+;	blo		.1
 
 	move.l		var1,var2
 
@@ -39,7 +40,7 @@ start:
 
 	move.w		#$0200,bplcon0(a4)	; blank screen
 	move.w		#0,bpldat(a4)		; zero bitplane data
-	move.w		#$0444,color(a4)	; background colour = dark gray
+	move.w		#$0555,color(a4)	; background colour = dark gray
 
 	lea		start_brightled(pc),a5
 	bra		fk_bankswitch
@@ -50,8 +51,9 @@ start_brightled:
 
 kickjump:
 	; jump to kick
-;	rts
 	; end
+	; rts
+	jmp		$F80000
 
 fk_bankswitch:
 	; switch bank

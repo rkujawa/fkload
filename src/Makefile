@@ -1,13 +1,31 @@
-AS=vasmm68k_mot
-LD=vlink
-ASFLAGS=-Fvobj -m68020up
-LDSCRIPT=vlink.cmd
-LDFLAGS=-brawbin1 -T $(LDSCRIPT)
-OUTPUT=fkload.rom
+NATIVE_CC=cc
 
-$(OUTPUT) : startup.s
-	$(AS) $(ASFLAGS) -Fvobj -o startup.o startup.s
-	$(LD) $(LDFLAGS) -o fkload.rom startup.o
+CROSS_AS=vasmm68k_mot
+CROSS_LD=vlink
+CROSS_ASFLAGS=-Fvobj #-m68020up
+CROSS_LDSCRIPT=vlink.cmd
+CROSS_LDFLAGS=-brawbin1 -T $(CROSS_LDSCRIPT)
+
+FKLOAD_IMAGE=fkload.img
+FKLOAD_FAKEKICK=kick.rom
+
+MAKEROM=makerom
+MAKEROM_OBJS=makerom.o
+
+all: $(MAKEROM) $(FKLOAD_IMAGE)
+
+$(FKLOAD_IMAGE) : startup.s
+	$(CROSS_AS) $(CROSS_ASFLAGS) -Fvobj -o startup.o startup.s
+	$(CROSS_LD) $(CROSS_LDFLAGS) -o $(FKLOAD_IMAGE) startup.o
+
+$(MAKEROM) : makerom.o
+	$(NATIVE_CC) -o $(MAKEROM) $(MAKEROM_OBJS)	
+
+%.o : %.c
+	$(NATIVE_CC) -c $<
+
+#$(FAKEKICK) : $(OUTPUT)
+#	$(MAKEROM)
 
 clean :
-	rm -f $(OUTPUT) startup.o
+	rm -f $(FKLOAD_IMAGE) $(FKLOAD_FAKEKICK) $(MAKEROM) $(MAKEROM_OBJS) startup.o
