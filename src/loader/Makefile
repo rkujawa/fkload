@@ -1,6 +1,6 @@
 CROSS_AS=vasmm68k_mot
 CROSS_LD=vlink
-CROSS_ASFLAGS=-Fvobj #-m68020up
+CROSS_ASFLAGS=-Fvobj -m68020up
 CROSS_LDSCRIPT=vlink.cmd
 CROSS_LDFLAGS=-brawbin1 -T $(CROSS_LDSCRIPT)
 

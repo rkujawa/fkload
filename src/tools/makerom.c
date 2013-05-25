@@ -10,7 +10,7 @@
 #include <sys/stat.h>
 #include <sys/uio.h>
 
-#define KICKSIZE 1024*256
+#define KICKSIZE 1024*512
 
 struct kickcrc {
 	uint32_t checksum;
@@ -20,8 +20,8 @@ struct kickcrc {
 
 static void process_rom(int, int);
 static uint32_t mksum(int);
-static void pad(int, size_t);
-static void copy(int ifd, int ofd);
+static void pad(int, int, size_t, size_t);
+static void copy(int, int);
 
 int
 main(int argc, char *argv[])
@@ -39,7 +39,7 @@ main(int argc, char *argv[])
 	} 
 
 	if ((ofd = open(argv[2], O_RDWR|O_CREAT)) == -1) {
-		fprintf(stderr, "error opening rom file %s\n", argv[1]);
+		fprintf(stderr, "error opening rom file %s\n", argv[2]);
 		exit(EXIT_FAILURE);
 	} 
 
@@ -61,9 +61,24 @@ process_rom(int ifd, int ofd)
 
 	copy(ifd, ofd);
 	/* pad with zeroes */
-	//pad(ifd, ofd);
+	pad(ifd, ofd, ifstat.st_size, KICKSIZE);
 	//mksum(ifd);
 
+}
+
+static void
+pad(int ifd, int ofd, size_t romsize, size_t padtosize)
+{
+	int i;
+	char c[1];
+
+	c[0] = '\0';
+    
+	lseek(ofd, romsize, SEEK_SET);
+    
+	for (i = romsize; i < padtosize; i++) {
+		write(ofd, c, 1);
+	}
 }
 
 static void
