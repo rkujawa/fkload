@@ -4,8 +4,11 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <fcntl.h>
+#include <unistd.h>
 
+#include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/uio.h>
 
 #define KICKSIZE 1024*256
 
@@ -15,8 +18,10 @@ struct kickcrc {
 	uint16_t exv[8];
 };
 
+static void process_rom(int, int);
 static uint32_t mksum(int);
-static void pad(int, int);
+static void pad(int, size_t);
+static void copy(int ifd, int ofd);
 
 int
 main(int argc, char *argv[])
@@ -38,13 +43,15 @@ main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	} 
 
-	pad(ifd, ofd);
-	//mksum(ifd);
+	process_rom(ifd, ofd);
+
+	close(ifd);
+	close(ofd);
 }
 
 /* Create padded Kickstart image */
 static void
-pad(int ifd, int ofd)
+process_rom(int ifd, int ofd)
 {
 	struct stat ifstat;
 
@@ -52,7 +59,21 @@ pad(int ifd, int ofd)
 		fprintf(stderr, "error stating input file\n");
 	}
 
+	copy(ifd, ofd);
 	/* pad with zeroes */
+	//pad(ifd, ofd);
+	//mksum(ifd);
+
+}
+
+static void
+copy(int ifd, int ofd)
+{
+	int n;
+	char c[1];
+
+	while ((n = read(ifd, c, 1)) > 0)
+		write(ofd, c, n);	
 
 }
 

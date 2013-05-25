@@ -1,0 +1,21 @@
+CROSS_AS=vasmm68k_mot
+CROSS_LD=vlink
+CROSS_ASFLAGS=-Fvobj #-m68020up
+CROSS_LDSCRIPT=vlink.cmd
+CROSS_LDFLAGS=-brawbin1 -T $(CROSS_LDSCRIPT)
+
+FKLOAD_IMAGE=fkload.img
+FKLOAD_FAKEKICK=kick.rom
+FKLOAD_OBJS=startup.o
+
+all: $(FKLOAD_IMAGE)
+
+$(FKLOAD_IMAGE) : $(FKLOAD_OBJS)
+	$(CROSS_LD) $(CROSS_LDFLAGS) -o $(FKLOAD_IMAGE) $(FKLOAD_OBJS)
+
+%.o : %.S
+	$(CROSS_AS) $(CROSS_ASFLAGS) -Fvobj -o $@ $<
+
+clean :
+	rm -f $(FKLOAD_IMAGE) $(FKLOAD_FAKEKICK) $(FKLOAD_OBJS)
+
