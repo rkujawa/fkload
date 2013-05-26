@@ -10,18 +10,14 @@
 #include <sys/stat.h>
 #include <sys/uio.h>
 
+#include "sum.h"
+
 #define KICKSIZE 1024*512
 
-struct kickcrc {
-	uint32_t checksum;
-	uint32_t romsize;
-	uint16_t exv[8];
-};
 
-static void process_rom(int, int);
-static uint32_t mksum(int);
-static void pad(int, int, size_t, size_t);
-static void copy(int, int);
+static void makerom_process(int, int);
+static void makerom_pad(int, int, size_t, size_t);
+static void makerom_copy(int, int);
 
 int
 main(int argc, char *argv[])
@@ -38,20 +34,22 @@ main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	} 
 
-	if ((ofd = open(argv[2], O_RDWR|O_CREAT)) == -1) {
+	if ((ofd = open(argv[2], O_RDWR|O_CREAT|O_TRUNC)) == -1) {
 		fprintf(stderr, "error opening rom file %s\n", argv[2]);
 		exit(EXIT_FAILURE);
 	} 
 
-	process_rom(ifd, ofd);
+	makerom_process(ifd, ofd);
+
+	fchmod(ofd, S_IRUSR|S_IWUSR|S_IROTH|S_IRGRP);
 
 	close(ifd);
 	close(ofd);
 }
 
-/* Create padded Kickstart image */
+/* Create Kickstart from image opened in ifd, write to ofd. */
 static void
-process_rom(int ifd, int ofd)
+makerom_process(int ifd, int ofd)
 {
 	struct stat ifstat;
 
@@ -59,15 +57,15 @@ process_rom(int ifd, int ofd)
 		fprintf(stderr, "error stating input file\n");
 	}
 
-	copy(ifd, ofd);
-	/* pad with zeroes */
-	pad(ifd, ofd, ifstat.st_size, KICKSIZE);
-	//mksum(ifd);
+	makerom_copy(ifd, ofd);
+	makerom_pad(ifd, ofd, ifstat.st_size, KICKSIZE);
+	sum_write(ofd, KICKSIZE);
 
 }
 
+/* Pad with zeroes. */
 static void
-pad(int ifd, int ofd, size_t romsize, size_t padtosize)
+makerom_pad(int ifd, int ofd, size_t romsize, size_t makerom_padtosize)
 {
 	int i;
 	char c[1];
@@ -76,13 +74,13 @@ pad(int ifd, int ofd, size_t romsize, size_t padtosize)
     
 	lseek(ofd, romsize, SEEK_SET);
     
-	for (i = romsize; i < padtosize; i++) {
+	for (i = romsize; i < makerom_padtosize; i++) {
 		write(ofd, c, 1);
 	}
 }
 
 static void
-copy(int ifd, int ofd)
+makerom_copy(int ifd, int ofd)
 {
 	int n;
 	char c[1];
@@ -92,11 +90,4 @@ copy(int ifd, int ofd)
 
 }
 
-/* Compute Kickstart checksum */
-static uint32_t
-mksum(int fd)
-{
-	/* compute checksum */
-	return 0;	
-}
 

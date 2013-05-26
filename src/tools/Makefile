@@ -1,11 +1,11 @@
 NATIVE_CC=cc
 
 MAKEROM=makerom
-MAKEROM_OBJS=makerom.o
+MAKEROM_OBJS=makerom.o sum.o
 
 all: $(MAKEROM)
 
-$(MAKEROM) : makerom.o
+$(MAKEROM) : $(MAKEROM_OBJS)
 	$(NATIVE_CC) -o $(MAKEROM) $(MAKEROM_OBJS)	
 
 %.o : %.c

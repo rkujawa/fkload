@@ -16,7 +16,7 @@ ciaddra		EQU	$200
 
 	section		"init",code
 
-	dc.w		$1111
+	dc.w		$1114
 init:
 	; copy code and data to RAM
 	lea		__prg_start(pc),a0
@@ -47,7 +47,7 @@ start:
 	subq.l		#1,d0 
 
 	move.b		#3,ciaabase+ciaddra
-	move.b		#2,ciaabase		; dim LED
+	move.b		#2,ciaabase		; dim LED, boot ROM off
 
 	lea		custombase,a4		; load custom chips address
 	move.w		#$7FFF,d0
