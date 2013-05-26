@@ -6,7 +6,7 @@ LOADER_ROM = kick.rom  # fkload.rom
 
 .PHONY: tools loader
 
-all: tools loader img2rom
+all: tools loader $(LOADER_ROM) 
 
 tools:
 	$(MAKE) -C $(TOOLS_DIR)
@@ -14,7 +14,7 @@ tools:
 loader: 
 	$(MAKE) -C $(LOADER_DIR)
 
-img2rom: $(LOADER_DIR)/$(LOADER_IMAGE)
+$(LOADER_ROM): $(LOADER_DIR)/$(LOADER_IMAGE)
 	$(TOOLS_DIR)/makerom $(LOADER_DIR)/$(LOADER_IMAGE) $(LOADER_ROM) 
 
 clean:

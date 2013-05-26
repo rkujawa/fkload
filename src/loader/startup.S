@@ -17,7 +17,17 @@ ciaddra		EQU	$200
 	section		"init",code
 
 	dc.w		$1114
+	dc.w		$4ef9	/* jump */	
+	dc.l		init
 init:
+
+	move.l		#$020000,d0		; delay
+delay:	subq.l		#1,d0 
+	jbgt		delay
+
+	move.b		#3,ciaabase+ciaddra
+	move.b		#2,ciaabase		; dim LED, boot ROM off
+
 	; copy code and data to RAM
 	lea		__prg_start(pc),a0
 	lea		start,a1
@@ -40,14 +50,8 @@ start:
 ;	lea		stack,sp ; $040000,sp ; set stack pointer 
 	lea		$040000,sp ; set stack pointer 
 	move.l		testdata,testbss
-; infinite loop
+
 .1:	jmp		.1
-
-	move.l		#$020000,d0		; delay
-	subq.l		#1,d0 
-
-	move.b		#3,ciaabase+ciaddra
-	move.b		#2,ciaabase		; dim LED, boot ROM off
 
 	lea		custombase,a4		; load custom chips address
 	move.w		#$7FFF,d0
@@ -57,7 +61,9 @@ start:
 
 	move.w		#$0200,bplcon0(a4)	; blank screen
 	move.w		#0,bpldat(a4)		; zero bitplane data
-	move.w		#$0555,color(a4)	; background colour = dark gray
+	move.w		#$0111,color(a4)	; background colour = dark gray
+
+
 
 	lea		start_brightled(pc),a5
 	bra		fk_bankswitch
