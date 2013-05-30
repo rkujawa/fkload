@@ -1,10 +1,11 @@
 CROSS_AS=vasmm68k_mot
 CROSS_LD=vlink
+CROSS_CC=vc
 CROSS_ASFLAGS=-Fvobj -m68020up
 CROSS_LDSCRIPT=vlink.cmd
 CROSS_LDFLAGS=-brawbin1 -T $(CROSS_LDSCRIPT)
 
-LOADER_OBJS=startup.o
+LOADER_OBJS=startup.o fkload.o
 LOADER_IMAGE=fkload.img
 
 all: $(LOADER_IMAGE)
@@ -14,6 +15,9 @@ $(LOADER_IMAGE) : $(LOADER_OBJS)
 
 %.o : %.S
 	$(CROSS_AS) $(CROSS_ASFLAGS) -Fvobj -o $@ $<
+
+#%.o : %.c
+#	$(CROSS_CC) $(CROSS_CFLAGS) -c $<
 
 clean :
 	rm -f $(LOADER_IMAGE) $(LOADER_OBJS)
