@@ -1,13 +1,4 @@
-custombase	EQU	$DFF000
-dmacon		EQU	$096
-intena		EQU	$09A
-intreq		EQU	$09C
-bplcon0		EQU	$100
-bpldat		EQU	$110
-color		EQU	$180
-
-ciaabase	EQU	$BFE001
-ciaddra		EQU	$200
+	include hardware.i
 
 	xref	__prg_start
 	xref	__copy_len
@@ -38,8 +29,8 @@ delay:	subq.l		#1,d0
 	lea		__prg_start(pc),a0
 	lea		start,a1
 	move.l		#__copy_len,d0
-.1:	move.b		(a0)+,(a1)+
-	subq.l		#1,d0
+.1:	move.w		(a0)+,(a1)+
+	subq.l		#2,d0
 	bne		.1
 
 	; clear bss
