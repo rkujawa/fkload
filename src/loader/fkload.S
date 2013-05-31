@@ -5,13 +5,24 @@
 	code
 
 start:
-	lea		$40000,sp ; set stack pointer 
+	lea		$40000,sp		; set stack pointer 
 
-	move.w		#$0200,bplcon0(a4)		; blank screen
-	move.w		#0,bpldat(a4)			; zero bitplane data
-	move.w		#$0340,color(a4)		; shitty green
+	move.l		testdata,testbss	; just a test...
 
-	move.l		testdata,testbss
+	move.w		#$0200,bplcon0(a4)	; blank screen
+	move.w		#0,bpldat(a4)		; zero bitplane data
+	move.w		#$0340,color(a4)	; shitty green
+
+	move.b		ciaabase+ciasdr,d3	; read key scan code
+
+	cmpi.b		#$b9,d3
+	beq		fpressed
+fnotpressed:
+	move.w		#$0595,color(a4)	; light green
+.1:	jmp		.1
+
+fpressed:
+	move.w		#$0340,color(a4)	; shitty green
 .1:	jmp		.1
 
 	data

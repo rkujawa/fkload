@@ -1,16 +1,15 @@
-	include hardware.i
+	include		hardware.i
 
-	xref	__prg_start
-	xref	__copy_len
-	xref	__bss_start
-	xref	__bss_end
-	xref	start
+	xref		__prg_start
+	xref		__copy_len
+	xref		__bss_start
+	xref		__bss_end
+	xref		start
 
 	section		"init",code
 
 	dc.w		$1114
 	jmp		$F80008			; this MUST be here 
-
 init:						; $F80008
 	move.l		#$020000,d0		; delay
 delay:	subq.l		#1,d0 

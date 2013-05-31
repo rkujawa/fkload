@@ -8,5 +8,6 @@ color		EQU	$180
 
 ciaabase	EQU	$BFE001
 ciaddra		EQU	$200
+ciasdr          EQU     $C00
 
 ; vim: set ft=asm68k:
