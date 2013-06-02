@@ -61,6 +61,9 @@ makerom_process(int ifd, int ofd)
 	makerom_pad(ifd, ofd, ifstat.st_size, KICKSIZE);
 	sum_write(ofd, KICKSIZE);
 
+	printf("makerom: %lld out of %d kB used\n", 
+	    ifstat.st_size/1024, KICKSIZE/1024);
+
 }
 
 /* Pad with zeroes. */
