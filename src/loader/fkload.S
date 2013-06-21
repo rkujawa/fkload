@@ -18,8 +18,7 @@ start:
 	cmpi.b		#$b9,d3
 	beq		fpressed
 fnotpressed:
-	move.w		#$0595,color(a4)	; light green
-.1:	jmp		.1
+	jmp		menu	
 
 fpressed:
 	move.w		#$0340,color(a4)	; shitty green

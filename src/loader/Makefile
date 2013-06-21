@@ -5,7 +5,7 @@ CROSS_ASFLAGS=-Fvobj -m68020up
 CROSS_LDSCRIPT=vlink.cmd
 CROSS_LDFLAGS=-brawbin1 -T $(CROSS_LDSCRIPT)
 
-LOADER_OBJS=startup.o fkload.o
+LOADER_OBJS=startup.o fkload.o menu.o
 LOADER_INCS=hardware.i
 LOADER_IMAGE=fkload.img
 
