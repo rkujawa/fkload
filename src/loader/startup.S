@@ -13,7 +13,7 @@
 init:						; $F80008
 	move.l		#$020000,d0		; delay
 delay:	subq.l		#1,d0 
-	jbgt		delay
+	bgt.s		delay
 
 	move.b		#3,ciaabase+ciaddra
 	move.b		#2,ciaabase		; dim LED
