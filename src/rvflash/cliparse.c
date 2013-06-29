@@ -8,6 +8,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <string.h>
+
 #include <exec/types.h>
 #include <exec/execbase.h>
 #include <workbench/startup.h>
@@ -30,12 +32,47 @@ static struct RDArgs *arg_res;
 static STRPTR arg_template;	/* should be const? */
 static UBYTE arg_num;		/* how many arugments are there? */
 
-static struct arg_def
+static struct arg_def *arg_defs = NULL;
 
 static UBYTE
-arg_find_no_by_name(CONST_STRPTR name) 
+arg_def_find_no_by_name(CONST_STRPTR name) 
 {
-	
+	UBYTE rv;
+
+#ifdef DEBUG
+	if (arg_defs == NULL) {
+		printf("DEBUG: arg_defs == NULL\n");
+	}
+#endif /* DEBUG	*/
+	rv = 0;
+	while (arg_defs != NULL) {
+		if (strcmp(arg_defs->name, name) == 0)
+			return rv;
+		arg_defs++; 
+		rv++;
+	}
+
+	return rv;
+}
+
+BOOL
+arg_isempty(CONST_STRPTR name)
+{
+	UBYTE argtype;
+	UBYTE argno;
+
+	argno = arg_def_find_no_by_name(name);
+
+	switch (argtype) {
+	case ARGTYPE_SWITCH:
+		return arg_switch_isempty(argno);
+	case ARGTYPE_TOGGLE:
+		return arg_toggle_isempty(argno);
+	case ARGTYPE_KEY:
+		return arg_key_isempty(argno);
+	}
+
+	return 0;
 }
 
 BOOL
