@@ -1,0 +1,6 @@
+# binaries
+
+*.o
+*.img
+*.rom
+makerom
