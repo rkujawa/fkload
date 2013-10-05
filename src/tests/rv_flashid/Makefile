@@ -1,13 +1,11 @@
 CC=vc
 RMRF=rm -rf
 
-COMMONDIR=../common/
-
-CFLAGS=-I$(COMMONDIR)
+CFLAGS=-I../../
 LDFLAGS=-lamiga
 
-OBJECTS=rvflash.o cliparse.o
-ADDHEADERS=$(COMMONDIR)/config.h $(COMMONDIR)/hardware.h
+OBJECTS=rv_flashid.o
+ADDHEADERS=config.h hardware.h
 
 EXECUTABLE=rvflash
 
