@@ -3,7 +3,7 @@ RMRF=rm -rf
 
 COMMON=../../common
 
-CFLAGS=-I$(COMMON)
+CFLAGS=-I$(COMMON) -cpu=68020
 LDFLAGS=-lamiga
 
 OBJECTS=rv_flashid.o

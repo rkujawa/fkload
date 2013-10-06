@@ -78,7 +78,7 @@ rv_flash_read(ULONG offset)
 	ULONG *addr;
 
 	addr = RV_BANK_WINDOW + offset; /* XXX: for now */
-	rv = *addr;
+	rv = *addr; 
 #ifdef DEBUG_RW
 	printf("DEBUG_RW: read %x from %x\n", rv, addr);	
 #endif /* DEBUG_RW */
